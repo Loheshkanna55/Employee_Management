@@ -1,0 +1,52 @@
+<%- include('../partials/messages') %>
+
+<div class="container mt-4">
+  <h2>Salary Details</h2>
+
+  <p><strong>Employee:</strong> <%= salary.employee.name %> (<%= salary.employee.email %>)</p>
+  <p><strong>Department:</strong> <%= salary.employee.department %></p>
+  <p><strong>Position:</strong> <%= salary.employee.position %></p>
+  <p><strong>Month:</strong> <%= moment().month(salary.month - 1).format('MMMM') %> <%= salary.year %></p>
+  <p><strong>Base Salary:</strong> ₹ <%= salary.baseSalary.toFixed(2) %></p>
+
+  <h5>Deductions</h5>
+  <ul>
+    <% salary.deductions.forEach(d => { %>
+      <li><%= d.reason %>: ₹ <%= d.amount.toFixed(2) %></li>
+    <% }) %>
+  </ul>
+
+  <h5>Bonuses</h5>
+  <ul>
+    <% salary.bonuses.forEach(b => { %>
+      <li><%= b.reason %>: ₹ <%= b.amount.toFixed(2) %></li>
+    <% }) %>
+  </ul>
+
+  <p><strong>Total Deductions:</strong> ₹ <%= salary.totalDeductions.toFixed(2) %></p>
+  <p><strong>Total Bonuses:</strong> ₹ <%= salary.totalBonuses.toFixed(2) %></p>
+  <p><strong>Net Salary:</strong> ₹ <%= salary.netSalary.toFixed(2) %></p>
+
+  <form method="post" action="/admin/salary/<%= salary._id %>?_method=PUT">
+
+    <div class="mb-3">
+      <label>Status</label>
+      <select name="status" class="form-select">
+        <option value="pending" <%= salary.status === 'pending' ? 'selected' : '' %>>Pending</option>
+        <option value="paid" <%= salary.status === 'paid' ? 'selected' : '' %>>Paid</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>Payment Date</label>
+      <input type="date" name="paymentDate" class="form-control" value="<%= salary.paymentDate ? moment(salary.paymentDate).format('YYYY-MM-DD') : '' %>">
+    </div>
+
+    <div class="mb-3">
+      <label>Remarks</label>
+      <textarea name="remarks" class="form-control"><%= salary.remarks || '' %></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+</div>

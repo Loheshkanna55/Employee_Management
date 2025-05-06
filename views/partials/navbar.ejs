@@ -1,0 +1,19 @@
+<header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/">
+    <i class="fas fa-building me-2"></i>
+    EMS
+  </a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap d-flex align-items-center">
+      <span class="nav-link px-3 text-white">
+        Welcome, <%= currentUser.name %>!
+      </span>
+      <a class="nav-link px-3" href="/auth/logout">
+        <i class="fas fa-sign-out-alt me-1"></i> Logout
+      </a>
+    </div>
+  </div>
+</header>

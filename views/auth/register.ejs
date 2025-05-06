@@ -1,0 +1,112 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-lg border-0 rounded-lg">
+      <div class="card-header bg-primary text-white text-center py-4">
+        <h3 class="mb-0">
+          <i class="fas fa-building me-2"></i>
+          Employee Management System
+        </h3>
+      </div>
+      <div class="card-body p-4">
+        <h4 class="text-center mb-4">Register New Account</h4>
+        
+        <% if (locals.error_msg && error_msg.length > 0) { %>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
+        
+        <% if (locals.success_msg && success_msg.length > 0) { %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
+        
+
+        <form action="/auth/register" method="POST">
+          <div class="row mb-3">
+            <div class="col-12 mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+              </div>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+              </div>
+              <div class="form-text">Password must be at least 6 characters</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+              </div>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="department" class="form-label">Department</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                <select class="form-select" id="department" name="department" required>
+                  <option value="" selected disabled>Select your department</option>
+                  <option value="IT">Information Technology</option>
+                  <option value="HR">Human Resources</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Operations">Operations</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Customer Support">Customer Support</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="contactNumber" class="form-label">Contact Number</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                <input type="text" class="form-control" id="contactNumber" name="contactNumber" placeholder="Enter your contact number" required>
+              </div>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="address" class="form-label">Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                <textarea class="form-control" id="address" name="address" rows="2" placeholder="Enter your address" required></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-user-plus me-2"></i> Register
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer text-center py-3">
+        <div class="small">
+          Already have an account? <a href="/auth/login" class="text-decoration-none">Login here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="container-fluid" style="margin-left: -100px;">
+  <div class="row">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Apply for Leave</h1>
+        <a href="/employee/leave" class="btn btn-light">← Back to Leave List</a>
+
+      </div>
+
+      <% if (error_msg.length > 0) { %>
+        <div class="alert alert-danger"><%= error_msg[0] %></div>
+      <% } %>
+
+      <% if (success_msg.length > 0) { %>
+        <div class="alert alert-success"><%= success_msg[0] %></div>
+      <% } %>
+
+      <form action="/employee/leave/apply" method="POST" class="bg-white p-4 rounded shadow-sm">
+        <div class="mb-3">
+          <label for="leaveType" class="form-label">Leave Type</label>
+          <select name="leaveType" id="leaveType" class="form-select">
+            <option value="sick">Sick</option>
+            <option value="casual">Casual</option>
+            <option value="annual">Annual</option>
+            <option value="maternity">Maternity</option>
+            <option value="paternity">Paternity</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="startDate" class="form-label">Start Date</label>
+          <input type="date" name="startDate" id="startDate" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="endDate" class="form-label">End Date</label>
+          <input type="date" name="endDate" id="endDate" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="reason" class="form-label">Reason</label>
+          <textarea style="height: 100px;" name="reason" id="reason" class="form-control" required placeholder="Please describe the reason for your leave..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success" style="margin-top: 30px;">Apply for Leave</button>
+      </form>
+
+    </main>
+  </div>
+</div>

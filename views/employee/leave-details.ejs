@@ -1,0 +1,37 @@
+<div class="container-fluid" style="margin-left: -100px;">
+  <div class="row">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Leave Details</h1>
+        <a href="/employee/leave" class="btn btn-light">← Back to Leave List</a>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <p><strong>Leave Type:</strong> <%= leave.leaveType %></p>
+          <p><strong>Start Date:</strong> <%= moment(leave.startDate).format('YYYY-MM-DD') %></p>
+          <p><strong>End Date:</strong> <%= moment(leave.endDate).format('YYYY-MM-DD') %></p>
+          <p><strong>Duration:</strong> <%= leave.duration %> days</p>
+          <p><strong>Reason:</strong> <%= leave.reason %></p>
+          <p>
+            <strong>Status:</strong>
+            <span class="badge 
+              <%= leave.status === 'approved' ? 'bg-success' : 
+                    leave.status === 'rejected' ? 'bg-danger' : 
+                    'bg-warning text-dark' %>">
+              <%= leave.status.charAt(0).toUpperCase() + leave.status.slice(1) %>
+            </span>
+          </p>
+
+          <% if (leave.status === 'approved' || leave.status === 'rejected') { %>
+            <p><strong>Admin Remarks:</strong> <%= leave.adminRemarks %></p>
+            <p><strong>Reviewed By:</strong> <%= leave.reviewedBy.name %></p>
+            <p><strong>Reviewed At:</strong> <%= moment(leave.reviewedAt).format('YYYY-MM-DD') %></p>
+          <% } %>
+        </div>
+      </div>
+
+      
+    </main>
+  </div>
+</div>

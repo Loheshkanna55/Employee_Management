@@ -1,0 +1,95 @@
+<div class="container-fluid" style="margin-left: -100px;">
+    <div class="row">
+      <%- include('../partials/sidebar') %>
+  
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Attendance Management</h1>
+          <form class="row g-2">
+            <div class="col-auto">
+              <input type="date" class="form-control" name="date" value="<%= moment(selectedDate).format('YYYY-MM-DD') %>">
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+          </form>
+        </div>
+  
+        <!-- Present Employees -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Present Employees (<%= attendance.length %>)</h5>
+          </div>
+          <div class="card-body">
+            <% if (attendance.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Department</th>
+                      <th>Check-In</th>
+                      <th>Check-Out</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% attendance.forEach(att => { %>
+                      <tr>
+                        <td><%= att.employee.name %></td>
+                        <td><%= att.employee.department %></td>
+                        <td><%= moment(att.checkIn).format('h:mm A') %></td>
+                        <td><%= att.checkOut ? moment(att.checkOut).format('h:mm A') : '--' %></td>
+                        <td>
+                          <span class="badge bg-<%= att.status === 'present' ? 'success' : 'warning' %>">
+                            <%= att.status %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No attendance records for this date</p>
+            <% } %>
+          </div>
+        </div>
+  
+        <!-- Absent Employees -->
+        <div class="card shadow-sm">
+          <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Absent Employees (<%= absentEmployees.length %>)</h5>
+          </div>
+          <div class="card-body">
+            <% if (absentEmployees.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Department</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% absentEmployees.forEach(emp => { %>
+                      <tr>
+                        <td><%= emp.name %></td>
+                        <td><%= emp.department %></td>
+                        <td>
+                          <button class="btn btn-sm btn-outline-secondary">Mark Absent</button>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">All employees are present!</p>
+            <% } %>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>

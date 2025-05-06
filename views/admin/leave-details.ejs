@@ -1,0 +1,76 @@
+<div class="container-fluid"  style="margin-left: -100px;">
+    <div class="row">
+      <%- include('../partials/sidebar') %>
+  
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Leave Application Details</h1>
+          <a href="/admin/leave" class="btn btn-secondary">Back to List</a>
+        </div>
+  
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Employee:</strong> <%= leave.employee.name %></p>
+                <p><strong>Department:</strong> <%= leave.employee.department %></p>
+                <p><strong>Position:</strong> <%= leave.employee.position %></p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Leave Type:</strong> <%= leave.leaveType %></p>
+                <p><strong>Dates:</strong> 
+                  <%= moment(leave.startDate).format('MMM D, YYYY') %> - 
+                  <%= moment(leave.endDate).format('MMM D, YYYY') %>
+                </p>
+                <p><strong>Duration:</strong> <%= leave.duration %> days</p>
+              </div>
+            </div>
+  
+            <hr>
+  
+            <p><strong>Reason:</strong></p>
+            <div class="p-3 bg-light rounded mb-3">
+              <%= leave.reason %>
+            </div>
+  
+            <p><strong>Status:</strong>
+              <span class="badge bg-<%= leave.status === 'approved' ? 'success' : leave.status === 'rejected' ? 'danger' : 'warning' %>">
+                <%= leave.status %>
+              </span>
+            </p>
+  
+            <% if (leave.status === 'approved' || leave.status === 'rejected') { %>
+              <p><strong>Admin Remarks:</strong> <%= leave.adminRemarks %></p>
+              <p><strong>Reviewed By:</strong> <%= leave.reviewedBy.name %></p>
+              <p><strong>Reviewed At:</strong> <%= moment(leave.reviewedAt).format('MMM D, YYYY') %></p>
+            <% } %>
+          </div>
+        </div>
+  
+        <% if (leave.status === 'pending') { %>
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <h5 class="mb-0">Admin Action</h5>
+            </div>
+            <div class="card-body">
+              <form action="/admin/leave/<%= leave._id %>/approve" method="POST" class="mb-3">
+                <div class="mb-3">
+                  <label class="form-label">Remarks (Optional)</label>
+                  <textarea class="form-control" name="remarks" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Approve</button>
+              </form>
+  
+              <form action="/admin/leave/<%= leave._id %>/reject" method="POST">
+                <div class="mb-3">
+                  <label class="form-label">Rejection Reason (Required)</label>
+                  <textarea class="form-control" name="remarks" rows="2" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-danger">Reject</button>
+              </form>
+            </div>
+          </div>
+        <% } %>
+      </main>
+    </div>
+  </div>

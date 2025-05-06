@@ -1,0 +1,59 @@
+<div class="container-fluid" style="margin-left: -100px;">
+    <div class="row">
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Salary Details</h1>
+        </div>
+  
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <p><strong>Month:</strong> <%= salary.month %> <%= salary.year %></p>
+            <p><strong>Base Salary:</strong> ₹<%= salary.baseSalary.toFixed(2) %></p>
+  
+            <hr>
+            <h5>Deductions</h5>
+            <% if (salary.deductions.length > 0) { %>
+              <ul>
+                <% salary.deductions.forEach(d => { %>
+                  <li><%= d.reason %>: ₹<%= d.amount.toFixed(2) %></li>
+                <% }) %>
+              </ul>
+              <p><strong>Total Deductions:</strong> ₹<%= salary.totalDeductions.toFixed(2) %></p>
+            <% } else { %>
+              <p>No deductions</p>
+            <% } %>
+  
+            <hr>
+            <h5>Bonuses</h5>
+            <% if (salary.bonuses.length > 0) { %>
+              <ul>
+                <% salary.bonuses.forEach(b => { %>
+                  <li><%= b.reason %>: ₹<%= b.amount.toFixed(2) %></li>
+                <% }) %>
+              </ul>
+              <p><strong>Total Bonuses:</strong> ₹<%= salary.totalBonuses.toFixed(2) %></p>
+            <% } else { %>
+              <p>No bonuses</p>
+            <% } %>
+  
+            <hr>
+            <p><strong>Net Salary:</strong> ₹<%= salary.netSalary.toFixed(2) %></p>
+            <p><strong>Status:</strong> 
+              <span class="badge <%= salary.status === 'paid' ? 'bg-success' : 'bg-warning text-dark' %>">
+                <%= salary.status.charAt(0).toUpperCase() + salary.status.slice(1) %>
+              </span>
+            </p>
+            <% if (salary.paymentDate) { %>
+              <p><strong>Payment Date:</strong> <%= moment(salary.paymentDate).format('YYYY-MM-DD') %></p>
+            <% } %>
+            <% if (salary.remarks) { %>
+              <p><strong>Remarks:</strong> <%= salary.remarks %></p>
+            <% } %>
+          </div>
+        </div>
+  
+        <a href="/employee/salary" class="btn btn-light">← Back to Salary List</a>
+      </main>
+    </div>
+  </div>
+  

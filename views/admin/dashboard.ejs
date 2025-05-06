@@ -1,0 +1,140 @@
+<div class="container-fluid" style="margin-left: -100px;">
+    <div class="row">
+     
+  
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Admin Dashboard</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <span class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-calendar-day me-1"></i>
+              <%= moment().format('dddd, MMMM D, YYYY') %>
+            </span>
+          </div>
+        </div>
+  
+        <!-- Stats Cards -->
+        <div class="row">
+          <!-- Employee Count -->
+          <div class="col-md-4 mb-4">
+            <div class="card text-white bg-primary h-100">
+              <div class="card-body">
+                <h5 class="card-title">Total Employees</h5>
+                <h2 class="mb-0"><%= employeeCount %></h2>
+              </div>
+              <div class="card-footer">
+                <a href="/admin/employees" class="text-white">View All <i class="fas fa-arrow-right ms-1"></i></a>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Today's Attendance -->
+          <div class="col-md-4 mb-4">
+            <div class="card text-white bg-success h-100">
+              <div class="card-body">
+                <h5 class="card-title">Today's Attendance</h5>
+                <h2 class="mb-0"><%= todayAttendanceCount %></h2>
+              </div>
+              <div class="card-footer">
+                <a href="/admin/attendance" class="text-white">View Details <i class="fas fa-arrow-right ms-1"></i></a>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Pending Leaves -->
+          <div class="col-md-4 mb-4">
+            <div class="card text-white bg-warning h-100">
+              <div class="card-body">
+                <h5 class="card-title">Pending Leaves</h5>
+                <h2 class="mb-0"><%= pendingLeaveCount %></h2>
+              </div>
+              <div class="card-footer">
+                <a href="/admin/leave" class="text-white">Review Now <i class="fas fa-arrow-right ms-1"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Recent Leaves -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i> Recent Leave Applications</h5>
+          </div>
+          <div class="card-body">
+            <% if (recentLeaves.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Type</th>
+                      <th>Dates</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% recentLeaves.forEach(leave => { %>
+                      <tr>
+                        <td><%= leave.employee.name %></td>
+                        <td><%= leave.leaveType %></td>
+                        <td>
+                          <%= moment(leave.startDate).format('MMM D') %> - 
+                          <%= moment(leave.endDate).format('MMM D') %>
+                        </td>
+                        <td>
+                          <span class="badge bg-<%= leave.status === 'approved' ? 'success' : leave.status === 'rejected' ? 'danger' : 'warning' %>">
+                            <%= leave.status %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No recent leave applications</p>
+            <% } %>
+          </div>
+        </div>
+  
+        <!-- Today's Attendance -->
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-clock me-2"></i> Today's Attendance</h5>
+          </div>
+          <div class="card-body">
+            <% if (todayAttendance.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Check-In</th>
+                      <th>Check-Out</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% todayAttendance.forEach(att => { %>
+                      <tr>
+                        <td><%= att.employee.name %></td>
+                        <td><%= att.checkIn ? moment(att.checkIn).format('h:mm A') : '--' %></td>
+                        <td><%= att.checkOut ? moment(att.checkOut).format('h:mm A') : '--' %></td>
+                        <td>
+                          <span class="badge bg-<%= att.status === 'present' ? 'success' : 'warning' %>">
+                            <%= att.status %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No attendance records today</p>
+            <% } %>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>

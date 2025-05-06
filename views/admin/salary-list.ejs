@@ -1,0 +1,117 @@
+<div class="container-fluid"  style="margin-left: -100px;">
+    <div class="row">
+      <%- include('../partials/sidebar') %>
+  
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Salary Management</h1>
+          <form class="row g-2">
+            <div class="col-auto">
+              <select class="form-select" name="month">
+                <option value="">All Months</option>
+                <% for (let i = 1; i <= 12; i++) { %>
+                  <option value="<%= i %>" <%= selectedMonth == i ? 'selected' : '' %>>
+                    <%= moment().month(i-1).format('MMMM') %>
+                  </option>
+                <% } %>
+              </select>
+            </div>
+            <div class="col-auto">
+              <select class="form-select" name="year">
+                <% for (let i = 2020; i <= new Date().getFullYear(); i++) { %>
+                  <option value="<%= i %>" <%= selectedYear == i ? 'selected' : '' %>><%= i %></option>
+                <% } %>
+              </select>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+          </form>
+        </div>
+  
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <% if (salaries.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Period</th>
+                      <th>Base Salary</th>
+                      <th>Deductions</th>
+                      <th>Bonuses</th>
+                      <th>Net Salary</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% salaries.forEach(salary => { %>
+                      <tr>
+                        <td><%= salary.employee.name %></td>
+                        <td><%= salary.month %> <%= salary.year %></td>
+                        <td>$<%= salary.baseSalary.toFixed(2) %></td>
+                        <td>$<%= salary.totalDeductions.toFixed(2) %></td>
+                        <td>$<%= salary.totalBonuses.toFixed(2) %></td>
+                        <td>$<%= salary.netSalary.toFixed(2) %></td>
+                        <td>
+                          <span class="badge bg-<%= salary.status === 'paid' ? 'success' : 'warning' %>">
+                            <%= salary.status %>
+                          </span>
+                        </td>
+                        <td>
+                          <a href="/admin/salary/<%= salary._id %>" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No salary records found</p>
+            <% } %>
+          </div>
+        </div>
+  
+        <!-- Employees Without Salary -->
+        <% if (employeesWithoutSalary.length > 0 && selectedMonth && selectedYear) { %>
+          <div class="card shadow-sm">
+            <div class="card-header bg-warning">
+              <h5 class="mb-0">Employees Without Salary (<%= employeesWithoutSalary.length %>)</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Department</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% employeesWithoutSalary.forEach(emp => { %>
+                      <tr>
+                        <td><%= emp.name %></td>
+                        <td><%= emp.department %></td>
+                        <td>
+                          <a href="/admin/salary/allocate?employee=<%= emp._id %>&month=<%= selectedMonth %>&year=<%= selectedYear %>" 
+                             class="btn btn-sm btn-primary">
+                            Allocate Salary
+                          </a>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </main>
+    </div>
+  </div>

@@ -1,0 +1,43 @@
+<form action="/admin/employees/<%= employee._id %>" method="POST" class="p-4 shadow rounded bg-white">
+  <h4 class="mb-4 text-primary">Edit Employee</h4>
+
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input type="text" name="name" value="<%= employee.name %>" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="department" class="form-label">Department</label>
+    <div class="input-group">
+      <span class="input-group-text"><i class="fas fa-building"></i></span>
+      <select class="form-select" id="department" name="department" required>
+        <option disabled>Select your department</option>
+        <% const departments = ["IT", "HR", "Finance", "Marketing", "Operations", "Sales", "Engineering", "Customer Support"]; %>
+        <% departments.forEach(dept => { %>
+          <option value="<%= dept %>" <%= employee.department === dept ? 'selected' : '' %>><%= dept %></option>
+        <% }) %>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Position</label>
+    <input type="text" name="position" value="<%= employee.position %>" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Contact Number</label>
+    <input type="text" name="contactNumber" value="<%= employee.contactNumber %>" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Address</label>
+    <input type="text" name="address" value="<%= employee.address %>" class="form-control" required>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-success">
+      <i class="fas fa-save me-2"></i>Update Employee
+    </button>
+  </div>
+</form>

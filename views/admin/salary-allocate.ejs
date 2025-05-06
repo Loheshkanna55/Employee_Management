@@ -1,0 +1,49 @@
+<%- include('../partials/messages') %>
+
+<div class="container mt-4">
+  <h2>Allocate Salary</h2>
+
+  <form method="post" action="/admin/salary/allocate">
+    <input type="hidden" name="employeeId" value="<%= employee._id %>">
+    <input type="hidden" name="month" value="<%= month %>">
+    <input type="hidden" name="year" value="<%= year %>">
+
+    <div class="mb-3">
+      <label>Employee</label>
+      <input class="form-control" value="<%= employee.name %> (<%= employee.email %>)" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label>Working Days</label>
+      <input class="form-control" value="<%= workingDays %>" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label>Present Days</label>
+      <input class="form-control" value="<%= attendanceCount %>" readonly>
+    </div>
+
+    <div class="mb-3">
+      <label>Base Salary (₹)</label>
+      <input name="baseSalary" type="number" class="form-control" required>
+    </div>
+
+    <div id="deduction-section">
+      <label>Deductions</label>
+      <div class="row mb-2">
+        <div class="col"><input name="deductionReason" class="form-control" placeholder="Reason"></div>
+        <div class="col"><input name="deductionAmount" type="number" class="form-control" placeholder="Amount"></div>
+      </div>
+    </div>
+
+    <div id="bonus-section">
+      <label>Bonuses</label>
+      <div class="row mb-2">
+        <div class="col"><input name="bonusReason" class="form-control" placeholder="Reason"></div>
+        <div class="col"><input name="bonusAmount" type="number" class="form-control" placeholder="Amount"></div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>

@@ -1,0 +1,91 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="position-sticky pt-3 sidebar-sticky">
+    <% if (currentUser.role === 'admin') { %>
+      <!-- Admin Sidebar -->
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+        <span>Admin Dashboard</span>
+      </h6>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/admin/employees') ? 'active' : '' %>" href="/admin/employees">
+            <i class="fas fa-users me-2"></i>
+            Employees
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/admin/attendance') ? 'active' : '' %>" href="/admin/attendance">
+            <i class="fas fa-clock me-2"></i>
+            Attendance
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/admin/leave') ? 'active' : '' %>" href="/admin/leave">
+            <i class="fas fa-calendar-alt me-2"></i>
+            Leave Applications
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/admin/salary') ? 'active' : '' %>" href="/admin/salary">
+            <i class="fas fa-money-bill-alt me-2"></i>
+            Salary Management
+          </a>
+        </li>
+      </ul>
+    <% } else { %>
+      <!-- Employee Sidebar -->
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+        <span>Employee Portal</span>
+      </h6>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/employee/dashboard' ? 'active' : '' %>" href="/employee/dashboard">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path === '/employee/profile' ? 'active' : '' %>" href="/employee/profile">
+            <i class="fas fa-user me-2"></i>
+            My Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/employee/attendance') ? 'active' : '' %>" href="/employee/attendance">
+            <i class="fas fa-clock me-2"></i>
+            Attendance
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/employee/leave') ? 'active' : '' %>" href="/employee/leave">
+            <i class="fas fa-calendar-alt me-2"></i>
+            Leave Applications
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/employee/salary') ? 'active' : '' %>" href="/employee/salary">
+            <i class="fas fa-money-bill-alt me-2"></i>
+            My Salary
+          </a>
+        </li>
+      </ul>
+    <% } %>
+  </div>
+</nav>
+
+<script>
+  // Get current path
+  document.addEventListener('DOMContentLoaded', function() {
+    const path = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (link.getAttribute('href') === path) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>

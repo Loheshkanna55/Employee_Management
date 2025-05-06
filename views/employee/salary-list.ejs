@@ -1,0 +1,47 @@
+<div class="container-fluid" style="margin-left: -100px;">
+    <div class="row">
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">My Salary</h1>
+        </div>
+  
+        <% if (salaries.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Month</th>
+                  <th>Year</th>
+                  <th>Base Salary</th>
+                  <th>Net Salary</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% salaries.forEach(salary => { %>
+                  <tr>
+                    <td><%= salary.month %></td>
+                    <td><%= salary.year %></td>
+                    <td>₹<%= salary.baseSalary.toFixed(2) %></td>
+                    <td>₹<%= salary.netSalary.toFixed(2) %></td>
+                    <td>
+                      <span class="badge <%= salary.status === 'paid' ? 'bg-success' : 'bg-warning text-dark' %>">
+                        <%= salary.status.charAt(0).toUpperCase() + salary.status.slice(1) %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/employee/salary/<%= salary._id %>" class="btn btn-sm btn-outline-info">View</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <div class="alert alert-info">No salary records found.</div>
+        <% } %>
+      </main>
+    </div>
+  </div>
+  

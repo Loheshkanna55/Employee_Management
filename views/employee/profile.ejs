@@ -1,0 +1,20 @@
+<div class="container mt-4">
+  <h1 class="mb-4"><%= title %></h1>
+
+  <div class="card shadow-sm p-4 border-0">
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="mb-3 fw-bold"><%= user.name %></h4>
+        <ul class="list-unstyled mb-0">
+          <li><strong>Email:</strong> <span class="text-muted"><%= user.email %></span></li>
+          <li><strong>Role:</strong> <span class="text-muted"><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></span></li>
+          <li><strong>Department:</strong> <span class="text-muted"><%= user.department %></span></li>
+          <li><strong>Position:</strong> <span class="text-muted"><%= user.position %></span></li>
+          <li><strong>Contact Number:</strong> <span class="text-muted"><%= user.contactNumber || 'Not provided' %></span></li>
+          <li><strong>Address:</strong> <span class="text-muted"><%= user.address || 'Not provided' %></span></li>
+          <li><strong>Join Date:</strong> <span class="text-muted"><%= moment(user.joinDate).format('MMM D, YYYY') %></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

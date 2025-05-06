@@ -1,0 +1,50 @@
+<div class="container-fluid" style="margin-left: -100px;">
+  <div class="row">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Leave Applications</h1>
+        <a href="/employee/leave/apply" class="btn btn-primary">+ Apply for Leave</a>
+      </div>
+
+      <% if (leaveApplications.length > 0) { %>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Duration (Days)</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% leaveApplications.forEach(leave => { %>
+                <tr>
+                  <td><%= leave.leaveType %></td>
+                  <td><%= moment(leave.startDate).format('YYYY-MM-DD') %></td>
+                  <td><%= moment(leave.endDate).format('YYYY-MM-DD') %></td>
+                  <td><%= leave.duration %></td>
+                  <td>
+                    <span class="badge 
+                      <%= leave.status === 'approved' ? 'bg-success' :
+                            leave.status === 'rejected' ? 'bg-danger' : 
+                            'bg-warning text-dark' %>">
+                      <%= leave.status.charAt(0).toUpperCase() + leave.status.slice(1) %>
+                    </span>
+                  </td>
+                  <td>
+                    <a href="/employee/leave/<%= leave._id %>" class="btn btn-sm btn-outline-info">View Details</a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="alert alert-info">No leave applications found.</div>
+      <% } %>
+    </main>
+  </div>
+</div>

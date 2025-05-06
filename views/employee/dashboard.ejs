@@ -1,0 +1,231 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Employee Dashboard</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group me-2">
+      <span class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-calendar-day me-1"></i>
+        <%= moment().format('dddd, MMMM D, YYYY') %>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Attendance Status -->
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-clock me-2"></i>
+          Today's Attendance
+        </h5>
+      </div>
+      <div class="card-body">
+        <% if (todayAttendance) { %>
+          <div class="text-center mb-3">
+            <div class="attendance-status">
+              <span class="badge rounded-pill <%= todayAttendance.status === 'present' ? 'bg-success' : 'bg-warning' %> p-2 mb-2">
+                <i class="fas fa-check-circle me-1"></i>
+                <%= todayAttendance.status.charAt(0).toUpperCase() + todayAttendance.status.slice(1) %>
+              </span>
+            </div>
+
+            <div class="mt-3">
+              <% if (todayAttendance.checkIn) { %>
+                <p class="mb-2">
+                  <strong>Check In:</strong> 
+                  <%= moment(todayAttendance.checkIn).format('hh:mm A') %>
+                </p>
+              <% } %>
+              
+              <% if (todayAttendance.checkOut) { %>
+                <p class="mb-2">
+                  <strong>Check Out:</strong> 
+                  <%= moment(todayAttendance.checkOut).format('hh:mm A') %>
+                </p>
+                <p class="mb-0">
+                  <strong>Working Hours:</strong> 
+                  <%= todayAttendance.workingHours %> hrs
+                </p>
+              <% } else { %>
+                <form action="/employee/attendance/check-out" method="POST">
+                  <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-sign-out-alt me-1"></i>
+                    Check Out
+                  </button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="text-center">
+            <p class="text-muted mb-3">You haven't checked in today</p>
+            <form action="/employee/attendance/check-in" method="POST">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-sign-in-alt me-1"></i>
+                Check In
+              </button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+      <div class="card-footer text-center">
+        <a href="/employee/attendance" class="btn btn-sm btn-outline-primary">
+          Attendance Details <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leave Status -->
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Leave Applications
+        </h5>
+      </div>
+      <div class="card-body">
+        <% if (pendingLeaves && pendingLeaves.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>From</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% pendingLeaves.forEach(leave => { %>
+                  <tr>
+                    <td><%= leave.leaveType.charAt(0).toUpperCase() + leave.leaveType.slice(1) %></td>
+                    <td><%= moment(leave.startDate).format('MMM D') %></td>
+                    <td>
+                      <span class="badge rounded-pill bg-warning text-dark">Pending</span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="text-center text-muted">No pending leave applications</p>
+        <% } %>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <a href="/employee/leave" class="btn btn-sm btn-outline-primary">
+          View All <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+        <a href="/employee/leave/apply" class="btn btn-sm btn-primary">
+          <i class="fas fa-plus me-1"></i> Apply
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Salary Information -->
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-money-bill-alt me-2"></i>
+          Latest Salary
+        </h5>
+      </div>
+      <div class="card-body">
+        <% if (latestSalary) { %>
+          <div class="text-center">
+            <h3 class="text-primary mb-3">
+              $<%= latestSalary.netSalary.toFixed(2) %>
+            </h3>
+            <p class="mb-2">
+              <strong>Month:</strong> 
+              <%= latestSalary.month %> <%= latestSalary.year %>
+            </p>
+            <p class="mb-2">
+              <strong>Status:</strong> 
+              <span class="badge <%= latestSalary.status === 'paid' ? 'bg-success' : 'bg-warning text-dark' %>">
+                <%= latestSalary.status.charAt(0).toUpperCase() + latestSalary.status.slice(1) %>
+              </span>
+            </p>
+            <% if (latestSalary.paymentDate) { %>
+              <p class="mb-0">
+                <strong>Paid on:</strong> 
+                <%= moment(latestSalary.paymentDate).format('MMM D, YYYY') %>
+              </p>
+            <% } %>
+          </div>
+        <% } else { %>
+          <p class="text-center text-muted">No salary records found</p>
+        <% } %>
+      </div>
+      <div class="card-footer text-center">
+        <a href="/employee/salary" class="btn btn-sm btn-outline-primary">
+          View All Salary Records <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-chart-line me-2"></i>
+          Quick Actions
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 col-sm-6 mb-3">
+            <a href="/employee/profile" class="text-decoration-none">
+              <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center py-4">
+                  <i class="fas fa-user fa-2x text-primary mb-3"></i>
+                  <h5 class="card-title">My Profile</h5>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-3 col-sm-6 mb-3">
+            <a href="/employee/attendance/history" class="text-decoration-none">
+              <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center py-4">
+                  <i class="fas fa-history fa-2x text-primary mb-3"></i>
+                  <h5 class="card-title">Attendance History</h5>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-3 col-sm-6 mb-3">
+            <a href="/employee/leave/apply" class="text-decoration-none">
+              <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center py-4">
+                  <i class="fas fa-calendar-plus fa-2x text-primary mb-3"></i>
+                  <h5 class="card-title">Apply Leave</h5>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-3 col-sm-6 mb-3">
+            <a href="/employee/salary" class="text-decoration-none">
+              <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center py-4">
+                  <i class="fas fa-money-check-alt fa-2x text-primary mb-3"></i>
+                  <h5 class="card-title">Salary Details</h5>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

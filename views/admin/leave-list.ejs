@@ -1,0 +1,82 @@
+<div class="container-fluid"  style="margin-left: -100px;">
+    <div class="row">
+      <%- include('../partials/sidebar') %>
+  
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Leave Applications</h1>
+          <form class="row g-2">
+            <div class="col-auto">
+              <select class="form-select" name="status">
+                <option value="all" <%= selectedStatus === 'all' ? 'selected' : '' %>>All</option>
+                <option value="pending" <%= selectedStatus === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="approved" <%= selectedStatus === 'approved' ? 'selected' : '' %>>Approved</option>
+                <option value="rejected" <%= selectedStatus === 'rejected' ? 'selected' : '' %>>Rejected</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+          </form>
+        </div>
+  
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <% if (leaveApplications.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Type</th>
+                      <th>Dates</th>
+                      <th>Duration</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% leaveApplications.forEach(leave => { %>
+                      <tr>
+                        <td><%= leave.employee.name %></td>
+                        <td><%= leave.leaveType %></td>
+                        <td>
+                          <%= moment(leave.startDate).format('MMM D') %> - 
+                          <%= moment(leave.endDate).format('MMM D') %>
+                        </td>
+                        <td><%= leave.duration %> days</td>
+                        <td>
+                          <span class="badge bg-<%= leave.status === 'approved' ? 'success' : leave.status === 'rejected' ? 'danger' : 'warning' %>">
+                            <%= leave.status %>
+                          </span>
+                        </td>
+                        <td>
+                          <a href="/admin/leave/<%= leave._id %>" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          <% if (leave.status === 'pending') { %>
+                            <form action="/admin/leave/<%= leave._id %>/approve" method="POST" class="d-inline">
+                              <button type="submit" class="btn btn-sm btn-success">
+                                <i class="fas fa-check"></i>
+                              </button>
+                            </form>
+                            <form action="/admin/leave/<%= leave._id %>/reject" method="POST" class="d-inline">
+                              <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-times"></i>
+                              </button>
+                            </form>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted">No leave applications found</p>
+            <% } %>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
