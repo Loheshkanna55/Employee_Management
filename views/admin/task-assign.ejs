@@ -1,0 +1,42 @@
+<%- include('../partials/messages') %>
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Assign New Task</h5>
+    </div>
+    <div class="card-body">
+      <form action="/admin/tasks/assign" method="POST">
+        <div class="mb-3">
+          <label for="assignedTo" class="form-label">Employee</label>
+          <select name="assignedTo" id="assignedTo" class="form-select" required>
+            <option value="">-- Select Employee --</option>
+            <% employees.forEach(emp => { %>
+              <option value="<%= emp._id %>"><%= emp.name %> - <%= emp.email %></option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="title" class="form-label">Task Title</label>
+          <input type="text" name="title" id="title" class="form-control" placeholder="Enter task title" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="description" id="description" class="form-control" rows="3" placeholder="Enter task details" required></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="dueDate" class="form-label">Due Date</label>
+          <input type="date" name="dueDate" id="dueDate" class="form-control" required>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <a href="/admin/tasks" class="btn btn-secondary me-2">Cancel</a>
+          <button type="submit" class="btn btn-success">Assign Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

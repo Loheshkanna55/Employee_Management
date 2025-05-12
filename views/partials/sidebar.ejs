@@ -31,11 +31,18 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/admin/tasks') ? 'active' : '' %>" href="/admin/tasks">
+            <i class="fas fa-tasks me-2"></i>
+            Task Management
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link <%= path && path.startsWith('/admin/salary') ? 'active' : '' %>" href="/admin/salary">
             <i class="fas fa-money-bill-alt me-2"></i>
             Salary Management
           </a>
         </li>
+        
       </ul>
     <% } else { %>
       <!-- Employee Sidebar -->
@@ -68,18 +75,25 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link <%= path && path.startsWith('/employee/tasks') ? 'active' : '' %>" href="/employee/tasks">
+            <i class="fas fa-tasks me-2"></i>
+            My Tasks
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link <%= path && path.startsWith('/employee/salary') ? 'active' : '' %>" href="/employee/salary">
             <i class="fas fa-money-bill-alt me-2"></i>
             My Salary
           </a>
         </li>
+        
       </ul>
     <% } %>
   </div>
 </nav>
 
 <script>
-  // Get current path
+  // Highlight current link
   document.addEventListener('DOMContentLoaded', function() {
     const path = window.location.pathname;
     document.querySelectorAll('.nav-link').forEach(link => {

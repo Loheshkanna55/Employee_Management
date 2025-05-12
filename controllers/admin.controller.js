@@ -4,6 +4,7 @@ const User = require('../models/user.model');
 const Attendance = require('../models/attendance.model');
 const Leave = require('../models/leave.model');
 const Salary = require('../models/salary.model');
+const Task = require('../models/task.model');
 
 // Get admin dashboard
 const getDashboard = async (req, res) => {
@@ -169,7 +170,30 @@ const getEmployeeDetails = async (req, res) => {
     res.redirect('/admin/employees');
   }
 };
+const getTaskAssignForm = async (req, res) => {
+  const employees = await User.find({ role: 'employee' });
+  res.render('admin/task-assign', { title: 'Assign Task', employees });
+};
 
+const assignTask = async (req, res) => {
+  const { title, description, assignedTo, dueDate } = req.body;
+  await Task.create({ title, description, assignedTo, dueDate });
+  req.flash('success_msg', 'Task assigned successfully');
+  res.redirect('/admin/tasks');
+};
+
+const getAllTasks = async (req, res) => {
+  const tasks = await Task.find().populate('assignedTo', 'name email department position');
+  const filteredTasks = tasks.filter(task => task.assignedTo); // only tasks with valid users
+  res.render('admin/task-list', { title: 'All Tasks', tasks: filteredTasks })
+};
+
+const markTaskCompleted = async (req, res) => {
+  const taskId = req.params.id;
+  await Task.findByIdAndUpdate(taskId, { status: 'completed' });
+  req.flash('success_msg', 'Task marked as completed');
+  res.redirect('/admin/tasks');
+};
 // Update employee
 const updateEmployee = async (req, res) => {
   try {
@@ -681,5 +705,9 @@ module.exports = {
   allocateSalary,
   getSalaryDetails,
   updateSalary,
-  getEditEmployeeForm
+  getEditEmployeeForm,
+  getTaskAssignForm,
+  assignTask,
+  getAllTasks,
+  markTaskCompleted
 };

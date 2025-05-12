@@ -3,6 +3,7 @@ const User = require('../models/user.model');
 const Attendance = require('../models/attendance.model');
 const Leave = require('../models/leave.model');
 const Salary = require('../models/salary.model');
+const Task = require('../models/task.model');
 
 // Get employee dashboard
 const getDashboard = async (req, res) => {
@@ -406,6 +407,18 @@ const getSalaryDetails = async (req, res) => {
   }
 };
 
+
+const getMyTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({ assignedTo: req.session.user.id });
+    res.render('employee/tasks', { title: 'My Tasks', tasks });
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Error loading tasks');
+    res.redirect('/employee/dashboard');
+  }
+};
+
 module.exports = {
   getDashboard,
   getProfile,
@@ -419,5 +432,6 @@ module.exports = {
   applyLeave,
   getLeaveDetails,
   getSalary,
-  getSalaryDetails
+  getSalaryDetails,
+  getMyTasks
 };

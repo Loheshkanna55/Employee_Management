@@ -29,4 +29,6 @@ router.get('/leave/:id', employeeController.getLeaveDetails);
 router.get('/salary', employeeController.getSalary);
 router.get('/salary/:id', employeeController.getSalaryDetails);
 
+router.get('/tasks', employeeController.getMyTasks);
+
 module.exports = router;

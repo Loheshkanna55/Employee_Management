@@ -35,4 +35,9 @@ router.post('/salary/allocate', adminController.allocateSalary);
 router.get('/salary/:id', adminController.getSalaryDetails);
 router.put('/salary/:id', adminController.updateSalary);
 
+router.get('/tasks', adminController.getAllTasks);
+router.get('/tasks/assign', adminController.getTaskAssignForm);
+router.post('/tasks/assign', adminController.assignTask);
+router.post('/tasks/:id/complete', adminController.markTaskCompleted);
+ 
 module.exports = router;
