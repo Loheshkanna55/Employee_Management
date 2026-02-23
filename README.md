@@ -335,19 +335,4 @@ Current configuration is hardcoded in source (no `.env` support yet):
 
 For production, move secrets and connection strings to environment variables.
 
-## Known Limitations & Suggested Improvements
 
-- Add `.env` configuration support (`MONGO_URI`, `SESSION_SECRET`, `ADMIN_*`).
-- Add automated test coverage (unit/integration).
-- Add CSRF protection and stronger session/cookie hardening.
-- Improve error handling consistency in controller methods.
-- Add pagination/search for list-heavy admin screens.
-- Add API documentation and optional REST API mode.
-
----
-
-If you want, I can also generate:
-
-1. a **developer-focused README** with request/response flows,
-2. a **deployment README** for Docker/VPS,
-3. a **contribution guide** (`CONTRIBUTING.md`) and issue/PR templates.
