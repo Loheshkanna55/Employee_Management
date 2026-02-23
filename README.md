@@ -1,304 +1,353 @@
-# Blood Donation App
+# Employee Management System
 
-A full-stack web application that connects blood donors, recipients, and administrators in one workflow-driven platform.
-
-Built with **Node.js**, **Express**, **MongoDB (Mongoose)**, **Passport.js**, and **EJS**.
-
----
+A role-based Employee Management System built with **Node.js**, **Express**, **EJS**, and **MongoDB**. The application supports separate workflows for administrators and employees, including attendance tracking, leave management, salary records, profile updates, and task assignment.
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Core Features](#core-features)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Data Models](#data-models)
-- [User Roles and Flow](#user-roles-and-flow)
-- [Environment Variables](#environment-variables)
+- [How It Works](#how-it-works)
+  - [Authentication and Authorization](#authentication-and-authorization)
+  - [Admin Module](#admin-module)
+  - [Employee Module](#employee-module)
 - [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Run the Application](#run-the-application)
+  - [Default Admin Account](#default-admin-account)
+- [Routes](#routes)
 - [Available Scripts](#available-scripts)
-- [Major Routes](#major-routes)
-- [Status Lifecycle](#status-lifecycle)
-- [Screens and UI](#screens-and-ui)
-- [Known Gaps / Future Improvements](#known-gaps--future-improvements)
-- [Contributing](#contributing)
-
----
+- [Configuration Notes](#configuration-notes)
+- [Known Limitations & Suggested Improvements](#known-limitations--suggested-improvements)
 
 ## Overview
 
-The Blood Donation App helps:
+This project is a server-rendered HR management web app where:
 
-- **Donors** register blood donation requests.
-- **Recipients** submit blood requests.
-- **Admins** review requests, accept/reject them, schedule donations/receiving, and update blood bank stock.
+- **Admins** can manage employees, monitor attendance, review leave requests, allocate salary, and assign tasks.
+- **Employees** can view dashboards, check in/out, apply for leave, view salary records, update their profile, and track assigned tasks.
 
-It includes an end-to-end journey:
-
-1. User signs up / logs in.
-2. User submits donation or blood request.
-3. Admin reviews and updates status.
-4. User schedules appointment after approval.
-5. Admin confirms completion and stock changes are reflected in blood bank records.
-6. User tracks updates through a dedicated status page.
-
----
+The system uses Express sessions for login state and EJS templates for rendering pages.
 
 ## Core Features
 
-### Authentication & Session Management
-- User registration and login using Passport Local Strategy.
-- Password hashing via `bcryptjs` (Mongoose pre-save hook).
-- Persistent sessions stored in MongoDB with `connect-mongo`.
-- Logout support with session destroy.
+### Admin Features
 
-### Donor Flow
-- Submit a blood donation form (details + health info + amount + location).
-- Prevent duplicate active submissions when a pending item already exists.
-- Schedule donation appointment after approval.
-- Track approval/scheduling/completion status.
+- Admin dashboard with key summaries:
+  - total employees,
+  - today’s attendance count,
+  - pending leave requests,
+  - recent leave entries.
+- Employee lifecycle management:
+  - add employee,
+  - edit employee,
+  - view employee profile stats,
+  - delete employee and associated records.
+- Attendance monitoring:
+  - view attendance by date,
+  - view monthly attendance history for a specific employee,
+  - identify absent employees for a selected day.
+- Leave management:
+  - list/filter leave applications,
+  - view leave details,
+  - approve or reject requests with remarks.
+- Salary management:
+  - view/filter salary records,
+  - detect employees without salary for selected period,
+  - allocate salary with bonuses/deductions,
+  - update salary status/details.
+- Task management:
+  - assign tasks to employees,
+  - view all tasks,
+  - mark tasks as completed.
 
-### Recipient Flow
-- Submit a blood request form (blood type, amount, reason, location).
-- View available blood bank locations and stock by district.
-- Schedule blood receiving appointment after approval.
-- Track request and schedule status.
+### Employee Features
 
-### Admin Flow
-- View/manage donation and request submissions.
-- Approve/reject submissions.
-- View scheduled donor and recipient appointments.
-- Remove schedules when needed.
-- Mark blood as received/issued and update blood bank inventory.
-
-### Status Tracking
-- Unified status screen for donation/request lifecycle.
-- Displays schedule details (date, time, address) when available.
-- Handles scenarios like pending, accepted, cancelled schedule, completed, rejected.
-
----
+- Personal dashboard with:
+  - today’s attendance status,
+  - recent pending leaves,
+  - latest salary record.
+- Profile:
+  - view profile,
+  - update name/contact/address.
+- Attendance:
+  - check in,
+  - check out,
+  - view recent and monthly attendance history.
+- Leave:
+  - submit leave requests,
+  - list own leave applications,
+  - view application details and decision remarks.
+- Salary:
+  - list salary records,
+  - view detailed salary entry.
+- Tasks:
+  - view tasks assigned by admin.
 
 ## Tech Stack
 
-- **Backend:** Node.js, Express
-- **Database:** MongoDB + Mongoose
-- **Auth:** Passport.js (Local Strategy)
-- **Templating:** EJS
-- **Session Store:** connect-mongo
-- **Utilities:** dotenv, multer, connect-flash
-- **Frontend Assets:** Static CSS + images in `public/`
-
----
+- **Backend:** Node.js, Express.js
+- **Templating:** EJS + express-ejs-layouts
+- **Database:** MongoDB with Mongoose
+- **Authentication:** Session-based auth (`express-session`)
+- **Flash messaging:** `connect-flash`
+- **Utilities:** `moment`, `method-override`, `cookie-parser`
+- **Password security:** `bcryptjs`
 
 ## Project Structure
 
 ```text
-BloodDonationApp/
-├── app.js
-├── package.json
+Employee_Management/
+├── app.js                      # App entry point and middleware setup
+├── createAdmin.js              # Script to manually create an admin account
 ├── config/
-│   └── createAdmin.js
+│   └── createAdmin.js          # Auto-create admin on server startup if missing
+├── controllers/
+│   ├── admin.controller.js     # Admin business logic
+│   ├── auth.controller.js      # Login/register/logout flows
+│   └── employee.controller.js  # Employee business logic
+├── middleware/
+│   └── auth.middleware.js      # Auth + role guards
 ├── models/
-│   ├── User.js
-│   ├── BloodDonation.js
-│   ├── BloodRequest.js
-│   ├── BloodBank.js
-│   ├── schedule.js
-│   ├── requestSchedule.js
-│   └── ConfirmedSchedule .js
+│   ├── user.model.js
+│   ├── attendance.model.js
+│   ├── leave.model.js
+│   ├── salary.model.js
+│   └── task.model.js
 ├── routes/
-│   ├── auth.js
-│   ├── donate.js
-│   ├── receive.js
-│   ├── admin.js
-│   ├── status.js
-│   ├── Schedule.js
-│   ├── requestSchedule.js
-│   └── availability.js
-├── views/
-│   ├── *.ejs
-│   └── partials/
-└── public/
-    ├── css/
-    ├── js/
-    └── images/
+│   ├── admin.routes.js
+│   ├── auth.routes.js
+│   └── employee.routes.js
+├── public/
+│   ├── css/style.css
+│   └── js/main.js
+└── views/                      # EJS templates for auth, admin, employee, layouts
 ```
-
----
 
 ## Data Models
 
 ### `User`
-- `username`, `email`, `password`, `role` (`user` or `admin`)
-- Password hashed before save.
 
-### `BloodDonation`
-- Donor profile + donation details.
-- Tracks lifecycle status and scheduling metadata.
+Stores both employee and admin users.
 
-### `BloodRequest`
-- Recipient profile + request reason + amount.
-- Tracks lifecycle status and scheduling metadata.
+Key fields:
 
-### `BloodBank`
-- District/location-wise blood inventory (`A+`, `A-`, `B+`, etc.)
-- Multiple addresses per location.
+- `name`, `email`, `password`
+- `role` (`employee` or `admin`)
+- `department`, `position`, `joinDate`
+- `contactNumber`, `address`, `profileImage`
 
-### `Schedule`
-- Donor scheduling details (date, slot, health checklist, address).
+### `Attendance`
 
-### `ScheduleRequest`
-- Recipient scheduling details (session, slot, blood amount, prescription flag).
+Daily attendance records per employee.
 
----
+Key fields:
 
-## User Roles and Flow
+- `employee` (ref to `User`)
+- `date`, `checkIn`, `checkOut`
+- `status` (`present`, `absent`, `half-day`, `late`)
+- `workingHours`, `notes`
 
-### User
-- Register/login
-- Create donation/request
-- Schedule after approval
-- Monitor progress in status page
+### `Leave`
 
-### Admin
-- Access admin panels
-- Review all submissions
-- Approve/reject and manage schedules
-- Update stock movement after blood is handled
+Leave applications and review metadata.
 
----
+Key fields:
 
-## Environment Variables
+- `employee` (ref to `User`)
+- `leaveType` (`sick`, `casual`, `annual`, etc.)
+- `startDate`, `endDate`, `duration`, `reason`
+- `status` (`pending`, `approved`, `rejected`)
+- `adminRemarks`, `reviewedBy`, `reviewedAt`
 
-Create a `.env` file in project root:
+### `Salary`
 
-```env
-MONGO_URI=mongodb://127.0.0.1:27017/blood-donation-app
-SECRET=your_session_secret
-PORT=3000
-ADMIN_PASSWORD=your_admin_password
-```
+Payroll records by employee/month.
 
-> `createAdmin.js` auto-creates an admin user (if none exists) at startup using `ADMIN_PASSWORD`.
+Key fields:
 
----
+- `employee` (ref to `User`)
+- `month`, `year`, `baseSalary`
+- `deductions[]`, `bonuses[]`
+- `totalDeductions`, `totalBonuses`, `netSalary`
+- `status` (`pending`, `paid`), `paymentDate`, `remarks`
+
+### `Task`
+
+Admin-assigned work items.
+
+Key fields:
+
+- `title`, `description`
+- `assignedTo` (ref to `User`)
+- `dueDate`
+- `status` (`pending`, `completed`)
+
+## How It Works
+
+### Authentication and Authorization
+
+- Users register/login via `/auth`.
+- Passwords are hashed with bcrypt before storage.
+- On successful login, user data is stored in session (`req.session.user`).
+- Route protection is enforced via middleware:
+  - `authMiddleware`: only authenticated users,
+  - `adminMiddleware`: admin-only routes,
+  - `employeeMiddleware`: employee-only routes.
+
+### Admin Module
+
+The admin module provides HR operations:
+
+- manage users,
+- audit attendance,
+- review leave requests,
+- control payroll,
+- assign and track tasks.
+
+### Employee Module
+
+The employee module provides self-service operations:
+
+- personal attendance actions,
+- leave submission and tracking,
+- salary visibility,
+- profile maintenance,
+- assigned task visibility.
 
 ## Getting Started
 
-### 1) Clone repository
-```bash
-git clone https://github.com/<your-username>/BloodDonationApp.git
-cd BloodDonationApp
-```
+### Prerequisites
 
-### 2) Install dependencies
+- Node.js (v16+ recommended)
+- npm
+- MongoDB running locally on `mongodb://127.0.0.1:27017`
+
+### Installation
+
 ```bash
+git clone <your-repo-url>
+cd Employee_Management
 npm install
 ```
 
-### 3) Configure environment
-Create `.env` (see [Environment Variables](#environment-variables)).
+### Run the Application
 
-### 4) Run the server
+```bash
+npm run dev
+```
+
+or
+
 ```bash
 npm start
 ```
 
-Server starts on:
-- `http://localhost:3000` (default)
+The app runs by default on:
 
----
+- `http://localhost:3000`
+
+### Default Admin Account
+
+On startup, the app attempts to auto-create an admin account if it does not already exist.
+
+Default seeded credentials:
+
+- **Email:** `admin@gmail.com`
+- **Password:** `admin123`
+
+You can also run the manual admin script:
+
+```bash
+npm run create-admin
+```
+
+## Routes
+
+### Public/Auth
+
+- `GET /` – Landing page
+- `GET /auth/login` – Login page
+- `POST /auth/login` – Login submit
+- `GET /auth/register` – Register page
+- `POST /auth/register` – Register submit (employee role)
+- `GET /auth/logout` – Logout
+
+### Employee Routes (`/employee`)
+
+- `GET /dashboard`
+- `GET /profile`
+- `POST /profile`
+- `GET /attendance`
+- `POST /attendance/check-in`
+- `POST /attendance/check-out`
+- `GET /attendance/history`
+- `GET /leave`
+- `GET /leave/apply`
+- `POST /leave/apply`
+- `GET /leave/:id`
+- `GET /salary`
+- `GET /salary/:id`
+- `GET /tasks`
+
+### Admin Routes (`/admin`)
+
+- `GET /dashboard`
+- `GET /employees`
+- `GET /employees/add`
+- `POST /employees/add`
+- `GET /employees/:id`
+- `POST /employees/:id`
+- `DELETE /employees/:id`
+- `GET /employees/:id/edit`
+- `GET /attendance`
+- `GET /attendance/:id`
+- `GET /leave`
+- `GET /leave/:id`
+- `POST /leave/:id/approve`
+- `POST /leave/:id/reject`
+- `GET /salary`
+- `GET /salary/allocate`
+- `POST /salary/allocate`
+- `GET /salary/:id`
+- `PUT /salary/:id`
+- `GET /tasks`
+- `GET /tasks/assign`
+- `POST /tasks/assign`
+- `POST /tasks/:id/complete`
 
 ## Available Scripts
 
-- `npm start` → starts Express app (`node app.js`)
-- `npm test` → currently placeholder script
+- `npm start` – Run app with Node.js.
+- `npm run dev` – Run app with nodemon for development.
+- `npm run create-admin` – Execute manual admin creation script.
 
----
+## Configuration Notes
 
-## Major Routes
+Current configuration is hardcoded in source (no `.env` support yet):
 
-### Auth
-- `GET /` → login page
-- `GET /register` → registration page
-- `POST /register` → create user account
-- `POST /login` → authenticate user
-- `GET /logout` → logout user
+- MongoDB URL: `mongodb://127.0.0.1:27017/employee-management`
+- Session secret: `employee-management-secret`
+- Port fallback: `3000` (can be overridden by `PORT` env var)
 
-### User Features
-- `GET /home`
-- `GET /donate`
-- `POST /donate/donate`
-- `GET /receive`
-- `POST /receive/receive`
-- `GET /availability/:district`
-- `GET /schedule`
-- `POST /schedule`
-- `GET /request-schedule/:district`
-- `POST /request-schedule`
-- `GET /status`
+For production, move secrets and connection strings to environment variables.
 
-### Admin Features (mounted under `/admin`)
-- Donation/request management routes
-- Status transition routes (accept/reject/complete)
-- Schedule listing/removal routes
-- Receive-stock update routes
+## Known Limitations & Suggested Improvements
 
-> Refer to `routes/admin.js` for the full admin route set.
-
----
-
-## Status Lifecycle
-
-The app uses lifecycle statuses across donation/request entities:
-
-- `Pending`
-- `Accepted`/`Approved` (implementation has both references)
-- `Schedule Removed`
-- `Rejected`
-- `Completed`
-
-Status page composes database state and schedule records to show the user-friendly current stage.
-
----
-
-## Screens and UI
-
-Key EJS screens include:
-- `login`, `register`, `home`
-- `donate`, `receive`
-- `schedule`, `requestSchedule`
-- `status`, `availability`
-- `admin-home`, `admin-donations`, `admin-requests`, `adminSchedule`, `adminReceiveSchedule`, `adminHistory`
-
-Shared partials:
-- `views/partials/header.ejs`
-- `views/partials/footer.ejs`
-- `views/partials/home-header.ejs`
-
----
-
-## Known Gaps / Future Improvements
-
-- Add automated tests (unit/integration) for core user/admin flows.
-- Harden admin route protection with centralized admin middleware.
-- Standardize lifecycle enum values (`Accepted` vs `Approved`).
-- Rename `models/ConfirmedSchedule .js` to remove trailing space in filename.
-- Remove fallback hardcoded session secret and enforce env-only secret.
-- Add API docs (OpenAPI/Postman) and deployment guide.
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Open a pull request
-
-For major changes, open an issue first to discuss scope and design.
+- Add `.env` configuration support (`MONGO_URI`, `SESSION_SECRET`, `ADMIN_*`).
+- Add automated test coverage (unit/integration).
+- Add CSRF protection and stronger session/cookie hardening.
+- Improve error handling consistency in controller methods.
+- Add pagination/search for list-heavy admin screens.
+- Add API documentation and optional REST API mode.
 
 ---
 
 If you want, I can also generate:
-- a **one-page recruiter-ready README variant** (short + polished), and
-- a **portfolio/demo script** for interviews using this project.
+
+1. a **developer-focused README** with request/response flows,
+2. a **deployment README** for Docker/VPS,
+3. a **contribution guide** (`CONTRIBUTING.md`) and issue/PR templates.
