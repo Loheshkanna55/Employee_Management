@@ -12,7 +12,7 @@ const authRoutes = require('./routes/auth.routes');
 const employeeRoutes = require('./routes/employee.routes');
 const adminRoutes = require('./routes/admin.routes');
 const { authMiddleware } = require('./middleware/auth.middleware');
-
+const createAdmin = require('./config/createAdmin');
 // Initialize app
 const app = express();
 // Connect to MongoDB
@@ -22,7 +22,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/employee-management', {
 })
 .then(() => {
     console.log('MongoDB Connected');
-    createAdmin();   
+    createAdmin();
+  })
 .catch(err => console.log(err));
 
 // EJS setup
